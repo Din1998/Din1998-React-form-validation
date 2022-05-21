@@ -4,8 +4,8 @@ import { useState } from "react";
 
 function App() {
 
-  const [value,setValue] = useState({
-    userName:"",
+  const [values,setValue] = useState({
+    username:"",
     email:"",
     birthday:"",
     password:"",
@@ -18,19 +18,24 @@ function App() {
       name:"username",
       type:"text",
       placeholder:"Username",
-      lable:"Username"
+      errorMessage:"Username should be 3-16 charecters",
+      lable:"Username",
+      pattern:"^[A-Za-z0-9]{3,16}$",
+      required: true
     },
     {
       id:2,
       name:"email",
       type:"text",
       placeholder:"Email",
-      lable:"Email"
+      errorMessage:"It should be a valid email address !",
+      lable:"Email",
+      required: true
     },
     {
       id:3,
       name:"birthday",
-      type:"text",
+      type:"date",
       placeholder:"Birthday",
       lable:"Birthday"
     },
@@ -39,14 +44,20 @@ function App() {
       name:"password",
       type:"password",
       placeholder:"Password",
-      lable:"Password"
+      errorMessage:"Password should be 8-12 characters",
+      lable:"Password",
+      pattern: `^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$`,
+      required: true
     },
     {
       id:5,
       name:"confirmPassword",
       type:"password",
       placeholder:"Confirm Password",
-      lable:"Confirm Password"
+      errorMessage:"Password don't match",
+      lable:"Confirm Password",
+      pattern: values.password,
+      required: true
     },
     
   ]
@@ -55,10 +66,24 @@ function App() {
     e.preventDefault();
   }
 
+const onChange = (e) => {
+  setValue({...values,[e.target.name]: e.target.value})
+}
+
+console.log(values);
   return (
     <div className="app">
       <form onSubmit={handleSubmit}>
-        <FormInput name="username" placeholder="User Name"/>
+        <h1>Register</h1>
+        {inputs.map((input) => (
+          <FormInput 
+          key={input.id} 
+          {...input} 
+          value={values[input.name]}
+          onChange={onChange}
+          />
+        ))
+        }
         <button>Submit</button>
       </form>
     </div>
